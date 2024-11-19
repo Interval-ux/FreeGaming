@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login, Signup, and Tic Tac Toe</title>
+    <title>Tic Tac Toe</title>
     <style>
         /* General Styles */
+        :root {
+            --main-color: #6a11cb;
+            --secondary-color: #2575fc;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             display: flex;
@@ -13,10 +18,38 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            overflow: hidden;
+            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
             color: #fff;
+            overflow: hidden;
         }
+
+        .color-picker-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker-container label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .color-picker {
+            width: 30px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
         .container {
             width: 350px;
             background: #fff;
@@ -29,14 +62,17 @@
             transition: opacity 0.5s ease, transform 0.5s ease;
             color: #333;
         }
+
         .container.active {
             opacity: 1;
             transform: scale(1);
         }
+
         h2 {
             margin-bottom: 20px;
             font-size: 24px;
         }
+
         input {
             width: 90%;
             padding: 12px;
@@ -44,10 +80,11 @@
             border: 1px solid #ddd;
             border-radius: 8px;
         }
+
         button {
             width: 90%;
             padding: 12px;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -55,16 +92,15 @@
             font-size: 16px;
             transition: background 0.3s ease;
         }
+
         button:hover {
             background: linear-gradient(135deg, #5b0eb5, #1f66d1);
         }
-        .link a {
-            color: #2575fc;
-            text-decoration: none;
+
+        .info {
             font-size: 14px;
-        }
-        .link a:hover {
-            text-decoration: underline;
+            color: #666;
+            margin-top: 10px;
         }
 
         /* Game Board */
@@ -74,12 +110,14 @@
             align-items: center;
             color: #fff;
         }
+
         .game-board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-gap: 10px;
             margin-top: 20px;
         }
+
         .cell {
             width: 100px;
             height: 100px;
@@ -92,61 +130,34 @@
             cursor: pointer;
             position: relative;
         }
+
         .cell:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+
         .winner {
             margin-top: 20px;
             font-size: 20px;
             text-align: center;
         }
-
-        /* Particle Animation */
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            animation: fly 1s ease-out forwards;
-        }
-        @keyframes fly {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(calc(-50px + 100px * var(--x)), calc(-50px + 100px * var(--y))) scale(0.5);
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Login Container -->
-    <div id="login" class="container active">
-        <h2>Login</h2>
-        <form onsubmit="handleLogin(event)">
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div class="link">
-            <a href="#" onclick="showSignup()">Don't have an account? Sign Up</a>
-        </div>
+    <!-- Color Picker -->
+    <div class="color-picker-container">
+        <label for="color-picker">Main Color:</label>
+        <input type="color" id="color-picker" class="color-picker" value="#6a11cb">
     </div>
 
-    <!-- Signup Container -->
-    <div id="signup" class="container">
-        <h2>Sign Up</h2>
-        <form onsubmit="handleSignup(event)">
-            <input type="text" id="signup-username" placeholder="Username" required>
-            <input type="password" id="signup-password" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
+    <!-- Begin Page -->
+    <div id="begin" class="container active">
+        <h2>Continue to Tic Tac Toe</h2>
+        <form onsubmit="startGame(event)">
+            <input type="text" id="username" placeholder="Enter any username" required>
+            <input type="password" id="password" placeholder="Enter any password" required>
+            <button type="submit">Continue</button>
         </form>
-        <div class="link">
-            <a href="#" onclick="showLogin()">Already have an account? Login</a>
-        </div>
+        <p class="info">This information is not stored. Feel free to use random inputs.</p>
     </div>
 
     <!-- Game Container -->
@@ -158,35 +169,35 @@
     </div>
 
     <script>
-        function showLogin() {
-            document.getElementById('login').classList.add('active');
-            document.getElementById('signup').classList.remove('active');
+        // Change Main Color
+        document.getElementById('color-picker').addEventListener('input', function (event) {
+            const color = event.target.value;
+            document.documentElement.style.setProperty('--main-color', color);
+            document.documentElement.style.setProperty('--secondary-color', lightenColor(color, 30));
+        });
+
+        // Helper: Lighten Color
+        function lightenColor(color, percent) {
+            const num = parseInt(color.slice(1), 16),
+                  amt = Math.round(2.55 * percent),
+                  R = (num >> 16) + amt,
+                  G = (num >> 8 & 0x00FF) + amt,
+                  B = (num & 0x0000FF) + amt;
+            return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1).toUpperCase()}`;
         }
 
-        function showSignup() {
-            document.getElementById('signup').classList.add('active');
-            document.getElementById('login').classList.remove('active');
-        }
-
-        function handleLogin(event) {
+        // Start Game
+        function startGame(event) {
             event.preventDefault();
-            startGame();
-        }
-
-        function handleSignup(event) {
-            event.preventDefault();
-            startGame();
-        }
-
-        function startGame() {
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('signup').style.display = 'none';
+            document.getElementById('begin').style.display = 'none';
             document.getElementById('game').style.display = 'flex';
             initializeGame();
         }
 
+        // Game Logic
         let board = ['', '', '', '', '', '', '', '', ''];
         let currentPlayer = 'X';
+        let gameOver = false;
 
         function initializeGame() {
             const boardElement = document.getElementById('board');
@@ -194,6 +205,7 @@
             board = ['', '', '', '', '', '', '', '', ''];
             document.getElementById('winner').textContent = '';
             currentPlayer = 'X';
+            gameOver = false;
 
             for (let i = 0; i < 9; i++) {
                 const cell = document.createElement('div');
@@ -205,43 +217,40 @@
         }
 
         function handleCellClick(event) {
+            if (gameOver) return;
+
             const index = event.target.dataset.index;
-            if (board[index] === '' && !checkWinner()) {
+            if (board[index] === '') {
                 board[index] = currentPlayer;
                 event.target.textContent = currentPlayer;
                 if (checkWinner()) {
                     document.getElementById('winner').textContent = `${currentPlayer} Wins!`;
+                    gameOver = true;
                 } else if (board.every(cell => cell !== '')) {
                     document.getElementById('winner').textContent = 'It\'s a Tie!';
+                    gameOver = true;
                 } else {
                     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    if (currentPlayer === 'O') computerMove();
+                    if (currentPlayer === 'O') {
+                        setTimeout(computerMove, 500);
+                    }
                 }
             }
         }
 
         function computerMove() {
             const emptyCells = board.map((value, index) => value === '' ? index : null).filter(index => index !== null);
+
             const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             const cellElement = document.querySelector(`.cell[data-index="${randomIndex}"]`);
 
-            // Particle effect
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.setProperty('--x', Math.random());
-                particle.style.setProperty('--y', Math.random());
-                cellElement.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
+            board[randomIndex] = 'O';
+            cellElement.textContent = 'O';
 
-            setTimeout(() => {
-                board[randomIndex] = 'O';
-                cellElement.textContent = 'O';
-                if (checkWinner()) {
-                    document.getElementById('winner').textContent = 'O Wins!';
-                }
-            }, 1000);
+            if (checkWinner()) {
+                document.getElementById('winner').textContent = 'O Wins!';
+                gameOver = true;
+            }
         }
 
         function checkWinner() {
