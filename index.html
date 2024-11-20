@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Hub</title>
     <style>
-        /* Root Variables for Colors and Font */
+        /* Root Variables */
         :root {
             --main-color: #4A90E2;
             --secondary-color: #50E3C2;
@@ -14,6 +14,7 @@
             --font: 'Roboto', sans-serif;
         }
 
+        /* Global Styles */
         body {
             margin: 0;
             font-family: var(--font);
@@ -146,6 +147,7 @@
             <button onclick="startGame('Tic Tac Toe')">Tic Tac Toe</button>
             <button onclick="startGame('Memory Game')">Memory Game</button>
             <button onclick="startGame('Rock Paper Scissors')">Rock Paper Scissors</button>
+            <button onclick="startGame('Number Guessing')">Number Guessing</button>
         </div>
     </div>
 
@@ -180,14 +182,16 @@
             document.getElementById('usernameBar').textContent = `Player: ${currentUsername}`;
 
             const gameContent = document.getElementById('gameContent');
-            gameContent.innerHTML = ''; // Clear previous game
+            gameContent.innerHTML = ''; // Clear previous game content
 
             if (gameName === 'Tic Tac Toe') {
-                gameContent.innerHTML = '<p>Tic Tac Toe is under construction!</p>';
+                loadTicTacToe(gameContent);
             } else if (gameName === 'Memory Game') {
-                gameContent.innerHTML = '<p>Memory Game is under construction!</p>';
+                loadMemoryGame(gameContent);
             } else if (gameName === 'Rock Paper Scissors') {
-                gameContent.innerHTML = '<p>Rock Paper Scissors is under construction!</p>';
+                loadRPSGame(gameContent);
+            } else if (gameName === 'Number Guessing') {
+                loadNumberGuessing(gameContent);
             }
         }
 
@@ -196,7 +200,27 @@
             document.getElementById('gameSelection').classList.add('active');
         }
 
-        // Initial Page Load Animation
+        function loadTicTacToe(container) {
+            container.innerHTML = '<p>Tic Tac Toe logic goes here!</p>';
+            // Add Tic Tac Toe implementation here
+        }
+
+        function loadMemoryGame(container) {
+            container.innerHTML = '<p>Memory Game logic goes here!</p>';
+            // Add Memory Game implementation here
+        }
+
+        function loadRPSGame(container) {
+            container.innerHTML = '<p>Rock Paper Scissors logic goes here!</p>';
+            // Add Rock Paper Scissors implementation here
+        }
+
+        function loadNumberGuessing(container) {
+            container.innerHTML = '<p>Number Guessing logic goes here!</p>';
+            // Add Number Guessing implementation here
+        }
+
+        // Page Load Animation
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('begin').classList.add('active');
         });
