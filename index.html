@@ -119,11 +119,10 @@
     <div id="begin" class="container active">
         <h2>Welcome to Game Hub</h2>
         <form onsubmit="startSelection(event)">
-            <input type="text" id="username" placeholder="Enter any username" required>
-            <input type="password" id="password" placeholder="Enter any password" required>
+            <input type="text" id="username" placeholder="Enter your username" required>
             <button type="submit">Continue</button>
         </form>
-        <p class="info">This information is not stored. Feel free to use random inputs.</p>
+        <button onclick="playAsGuest()">Play as Guest</button>
     </div>
 
     <!-- Game Selection -->
@@ -149,7 +148,13 @@
 
         function startSelection(event) {
             event.preventDefault();
-            currentUsername = document.getElementById('username').value;
+            currentUsername = document.getElementById('username').value || 'Guest';
+            document.getElementById('begin').classList.remove('active');
+            document.getElementById('gameSelection').classList.add('active');
+        }
+
+        function playAsGuest() {
+            currentUsername = 'Guest';
             document.getElementById('begin').classList.remove('active');
             document.getElementById('gameSelection').classList.add('active');
         }
