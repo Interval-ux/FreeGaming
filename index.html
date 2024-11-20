@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Hub</title>
     <style>
-        /* General Styles */
+        /* Root Variables for Colors and Font */
         :root {
-            --main-color: #6a11cb;
-            --secondary-color: #2575fc;
-            --background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            --main-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --background-gradient: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            --button-gradient: linear-gradient(135deg, #6bcbef, #3a8dff);
+            --font: 'Roboto', sans-serif;
         }
 
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: var(--background);
+            font-family: var(--font);
+            background: var(--background-gradient);
             color: #fff;
             display: flex;
             justify-content: center;
@@ -25,50 +27,56 @@
         }
 
         .container {
-            width: 350px;
+            width: 90%;
+            max-width: 400px;
             background: #fff;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            text-align: center;
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.5s ease;
             color: #333;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 30px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.6s ease-in-out;
         }
 
         .container.active {
             opacity: 1;
-            transform: scale(1);
+            transform: translateY(0);
         }
 
         h2 {
+            font-size: 1.8rem;
             margin-bottom: 20px;
+            color: var(--main-color);
         }
 
         input {
-            width: 90%;
+            width: calc(100% - 20px);
             padding: 12px;
             margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 8px;
+            font-size: 1rem;
         }
 
         button {
-            width: 90%;
+            width: 100%;
             padding: 12px;
-            background: var(--background);
-            color: #fff;
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
             border: none;
             border-radius: 8px;
+            background: var(--button-gradient);
+            color: #fff;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s ease, transform 0.2s;
+            transition: transform 0.2s, background 0.3s;
         }
 
         button:hover {
-            background: linear-gradient(135deg, #5b0eb5, #1f66d1);
             transform: scale(1.05);
+            background: linear-gradient(135deg, #5AB9FF, #2A7AEF);
         }
 
         .games-container,
@@ -92,25 +100,31 @@
             margin-top: 20px;
         }
 
+        .game-list button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6AD1E8, #3A8AE2);
+        }
+
         .back-button {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .game-title {
-            font-size: 24px;
-            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 8px;
         }
 
         .username-bar {
             position: fixed;
             top: 10px;
             left: 10px;
-            font-size: 16px;
+            font-size: 1rem;
             padding: 10px 15px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 8px;
+            backdrop-filter: blur(5px);
         }
     </style>
 </head>
@@ -169,35 +183,17 @@
             gameContent.innerHTML = ''; // Clear previous game
 
             if (gameName === 'Tic Tac Toe') {
-                loadTicTacToe(gameContent);
+                gameContent.innerHTML = '<p>Tic Tac Toe is under construction!</p>';
             } else if (gameName === 'Memory Game') {
-                loadMemoryGame(gameContent);
+                gameContent.innerHTML = '<p>Memory Game is under construction!</p>';
             } else if (gameName === 'Rock Paper Scissors') {
-                loadRPSGame(gameContent);
+                gameContent.innerHTML = '<p>Rock Paper Scissors is under construction!</p>';
             }
         }
 
         function backToSelection() {
             document.getElementById('gameScreen').classList.remove('active');
             document.getElementById('gameSelection').classList.add('active');
-        }
-
-        function loadTicTacToe(container) {
-            container.innerHTML = '<p>Tic Tac Toe game goes here!</p>';
-            // Add your Tic Tac Toe game code here
-        }
-
-        function loadMemoryGame(container) {
-            container.innerHTML = '<p>Memory Game goes here!</p>';
-            // Add your Memory Game code here
-        }
-
-        function loadRPSGame(container) {
-            container.innerHTML = `
-                <p>Rock Paper Scissors game goes here!</p>
-                <p>Click to play Rock, Paper, or Scissors!</p>
-            `;
-            // Add your Rock Paper Scissors code here
         }
 
         // Initial Page Load Animation
