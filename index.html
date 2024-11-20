@@ -3,51 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
+    <title>Game Hub</title>
     <style>
         /* General Styles */
         :root {
             --main-color: #6a11cb;
             --secondary-color: #2575fc;
+            --background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
         }
 
         body {
+            margin: 0;
             font-family: 'Arial', sans-serif;
+            background: var(--background);
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
-            color: #fff;
             overflow: hidden;
-        }
-
-        .color-picker-container {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .color-picker-container label {
-            font-size: 14px;
-            color: #333;
-        }
-
-        .color-picker {
-            width: 30px;
-            height: 30px;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
         }
 
         .container {
@@ -57,9 +31,9 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border-radius: 12px;
             text-align: center;
-            opacity: 0;
             transform: scale(0.9);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            opacity: 0;
+            transition: all 0.5s ease;
             color: #333;
         }
 
@@ -70,7 +44,6 @@
 
         h2 {
             margin-bottom: 20px;
-            font-size: 24px;
         }
 
         input {
@@ -84,75 +57,68 @@
         button {
             width: 90%;
             padding: 12px;
-            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            background: var(--background);
             color: #fff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s;
         }
 
         button:hover {
             background: linear-gradient(135deg, #5b0eb5, #1f66d1);
+            transform: scale(1.05);
         }
 
-        .info {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        /* Game Board */
-        .game {
+        .games-container,
+        .game-screen {
             display: none;
             flex-direction: column;
             align-items: center;
-            color: #fff;
+            justify-content: center;
+            width: 100%;
         }
 
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-gap: 10px;
+        .games-container.active,
+        .game-screen.active {
+            display: flex;
+        }
+
+        .game-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
         }
 
-        .cell {
-            width: 100px;
-            height: 100px;
+        .back-button {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .game-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .username-bar {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+            padding: 10px 15px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            font-size: 36px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 100px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .cell:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .winner {
-            margin-top: 20px;
-            font-size: 20px;
-            text-align: center;
         }
     </style>
 </head>
 <body>
-    <!-- Color Picker -->
-    <div class="color-picker-container">
-        <label for="color-picker">Main Color:</label>
-        <input type="color" id="color-picker" class="color-picker" value="#6a11cb">
-    </div>
-
     <!-- Begin Page -->
     <div id="begin" class="container active">
-        <h2>Continue to Tic Tac Toe</h2>
-        <form onsubmit="startGame(event)">
+        <h2>Welcome to Game Hub</h2>
+        <form onsubmit="startSelection(event)">
             <input type="text" id="username" placeholder="Enter any username" required>
             <input type="password" id="password" placeholder="Enter any password" required>
             <button type="submit">Continue</button>
@@ -160,114 +126,79 @@
         <p class="info">This information is not stored. Feel free to use random inputs.</p>
     </div>
 
-    <!-- Game Container -->
-    <div id="game" class="game">
-        <h2>Tic Tac Toe</h2>
-        <div class="game-board" id="board"></div>
-        <p class="winner" id="winner"></p>
-        <button onclick="resetGame()">Restart Game</button>
+    <!-- Game Selection -->
+    <div id="gameSelection" class="games-container">
+        <h2>Select a Game</h2>
+        <div class="game-list">
+            <button onclick="startGame('Tic Tac Toe')">Tic Tac Toe</button>
+            <button onclick="startGame('Memory Game')">Memory Game</button>
+            <button onclick="startGame('Rock Paper Scissors')">Rock Paper Scissors</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="game-screen">
+        <div class="username-bar" id="usernameBar"></div>
+        <h2 class="game-title" id="gameTitle">Game Title</h2>
+        <div id="gameContent"></div>
+        <button class="back-button" onclick="backToSelection()">Back</button>
     </div>
 
     <script>
-        // Change Main Color
-        document.getElementById('color-picker').addEventListener('input', function (event) {
-            const color = event.target.value;
-            document.documentElement.style.setProperty('--main-color', color);
-            document.documentElement.style.setProperty('--secondary-color', lightenColor(color, 30));
-        });
+        let currentUsername = '';
 
-        // Helper: Lighten Color
-        function lightenColor(color, percent) {
-            const num = parseInt(color.slice(1), 16),
-                  amt = Math.round(2.55 * percent),
-                  R = (num >> 16) + amt,
-                  G = (num >> 8 & 0x00FF) + amt,
-                  B = (num & 0x0000FF) + amt;
-            return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1).toUpperCase()}`;
-        }
-
-        // Start Game
-        function startGame(event) {
+        function startSelection(event) {
             event.preventDefault();
-            document.getElementById('begin').style.display = 'none';
-            document.getElementById('game').style.display = 'flex';
-            initializeGame();
+            currentUsername = document.getElementById('username').value;
+            document.getElementById('begin').classList.remove('active');
+            document.getElementById('gameSelection').classList.add('active');
         }
 
-        // Game Logic
-        let board = ['', '', '', '', '', '', '', '', ''];
-        let currentPlayer = 'X';
-        let gameOver = false;
+        function startGame(gameName) {
+            document.getElementById('gameSelection').classList.remove('active');
+            document.getElementById('gameScreen').classList.add('active');
+            document.getElementById('gameTitle').textContent = gameName;
+            document.getElementById('usernameBar').textContent = `Player: ${currentUsername}`;
 
-        function initializeGame() {
-            const boardElement = document.getElementById('board');
-            boardElement.innerHTML = '';
-            board = ['', '', '', '', '', '', '', '', ''];
-            document.getElementById('winner').textContent = '';
-            currentPlayer = 'X';
-            gameOver = false;
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = ''; // Clear previous game
 
-            for (let i = 0; i < 9; i++) {
-                const cell = document.createElement('div');
-                cell.classList.add('cell');
-                cell.dataset.index = i;
-                cell.onclick = handleCellClick;
-                boardElement.appendChild(cell);
+            if (gameName === 'Tic Tac Toe') {
+                loadTicTacToe(gameContent);
+            } else if (gameName === 'Memory Game') {
+                loadMemoryGame(gameContent);
+            } else if (gameName === 'Rock Paper Scissors') {
+                loadRPSGame(gameContent);
             }
         }
 
-        function handleCellClick(event) {
-            if (gameOver) return;
-
-            const index = event.target.dataset.index;
-            if (board[index] === '') {
-                board[index] = currentPlayer;
-                event.target.textContent = currentPlayer;
-                if (checkWinner()) {
-                    document.getElementById('winner').textContent = `${currentPlayer} Wins!`;
-                    gameOver = true;
-                } else if (board.every(cell => cell !== '')) {
-                    document.getElementById('winner').textContent = 'It\'s a Tie!';
-                    gameOver = true;
-                } else {
-                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-                    if (currentPlayer === 'O') {
-                        setTimeout(computerMove, 500);
-                    }
-                }
-            }
+        function backToSelection() {
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('gameSelection').classList.add('active');
         }
 
-        function computerMove() {
-            const emptyCells = board.map((value, index) => value === '' ? index : null).filter(index => index !== null);
-
-            const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-            const cellElement = document.querySelector(`.cell[data-index="${randomIndex}"]`);
-
-            board[randomIndex] = 'O';
-            cellElement.textContent = 'O';
-
-            if (checkWinner()) {
-                document.getElementById('winner').textContent = 'O Wins!';
-                gameOver = true;
-            }
+        function loadTicTacToe(container) {
+            container.innerHTML = '<p>Tic Tac Toe game goes here!</p>';
+            // Add your Tic Tac Toe game code here
         }
 
-        function checkWinner() {
-            const winningCombos = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8],
-                [0, 3, 6], [1, 4, 7], [2, 5, 8],
-                [0, 4, 8], [2, 4, 6]
-            ];
-            return winningCombos.some(combo => {
-                const [a, b, c] = combo;
-                return board[a] && board[a] === board[b] && board[a] === board[c];
-            });
+        function loadMemoryGame(container) {
+            container.innerHTML = '<p>Memory Game goes here!</p>';
+            // Add your Memory Game code here
         }
 
-        function resetGame() {
-            initializeGame();
+        function loadRPSGame(container) {
+            container.innerHTML = `
+                <p>Rock Paper Scissors game goes here!</p>
+                <p>Click to play Rock, Paper, or Scissors!</p>
+            `;
+            // Add your Rock Paper Scissors code here
         }
+
+        // Initial Page Load Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('begin').classList.add('active');
+        });
     </script>
 </body>
 </html>
